@@ -6,6 +6,7 @@ from core.response import *
 from .models import *
 from .serializers import *
 from django.db.models import Q
+from apps.tracker.utils import notify_project
 
 
 class ProjectCRUDView(APIView):
@@ -19,7 +20,7 @@ class ProjectCRUDView(APIView):
     - DELETE: Delete a project.
     """
 
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     serializer_class = ProjectSerializer
     queryset = ProjectModel.objects.all()
 
@@ -63,7 +64,9 @@ class ProjectCRUDView(APIView):
 
     def post(self, request):
         current_user = request.user
+        
         serializer = self.serializer_class(data=request.data)
+        notify_project(2, "Project created")  # Example usage of notify_project
         if serializer.is_valid():
             serializer.save(owner=current_user)
             return CustomApiResponse(
