@@ -183,7 +183,6 @@ Send a valid refresh token to get a new access token without re-authenticating.
 #### 3rd: The commenter uses the normal API to create the comment. The backend signal detects the new comment and sends a WebSocket event. The bug creator and the assigned user, if connected with a valid JWT token via WebSocket, will receive the notification instantly.
 
 #### 4th: For testing the typing indicator event via Postman (WebSocket tab), you just send this JSON message in the message box: Once sent, the backend will broadcast this typing notification to other connected users in the same project room (except you).
----
 {
   "type": "typing",
   "user": "Momenggg"
