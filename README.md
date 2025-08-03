@@ -1,10 +1,10 @@
-# System Setup and Installation Guide (For Linux/WSL)
+## System Setup and Installation Guide (For Linux/WSL) If Need
 
-## 1. System Dependency Installation
+### 1. System Dependency Installation
 
 The following dependencies are required to compile and run Python projects that rely on system-level libraries. You only need to install them **once per machine**.
 
-### Install Required Packages:
+#### Install Required Packages:
 
 ```bash
 sudo apt update
@@ -18,11 +18,11 @@ libffi-dev liblzma-dev
 
 ---
 
-## 2. (Optional) Install Python 3.12.x from Source
+#### 2. (Optional) Install Python 3.12.x from Source
 
 If the required Python version (e.g., 3.12.3) is not available in your package manager, you can manually build it:
 
-### Download and Compile Python:
+#### Download and Compile Python:
 
 ```bash
 cd /usr/src
@@ -44,17 +44,17 @@ You now have Python 3.12.x installed as `python3.12`.
 
 Once system dependencies and Python are set:
 
-### Create a Virtual Environment and Install Project Requirements:
+#### 3.1 Create a Virtual Environment and Install Project Requirements:
 
 ```bash
 python3.12 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
-### set the .env from example.env
+#### 3.2set the .env from example.env
+
 
 You are now ready to start development or run the project.
-
 
 
 ## Project Run
@@ -65,19 +65,19 @@ step-2: python3 -m daphne bugtracker.asgi:application
     `/docs/`
 
 ## API endpoints
-### User Registration  
+#### User Registration  
 **POST** `/api/v1/registration/`  
 Create a new user account. Returns JWT access and refresh tokens on success.
 
-### User Login (Token Obtain)  
+#### User Login (Token Obtain)  
 **POST** `/api/v1/token/`  
 Authenticate user credentials and receive JWT access and refresh tokens.
 
-### Token Refresh  
+#### Token Refresh  
 **POST** `/api/v1/token/refresh/`  
 Send a valid refresh token to get a new access token without re-authenticating.
 
-### 1. Project CRUD API
+#### 1. Project CRUD API
 **URL:** `/api/v1/project/`  
 **Methods:** `GET`, `POST`, `PATCH`, `DELETE`  
 **Permissions:** Authenticated users only  
@@ -112,7 +112,7 @@ Send a valid refresh token to get a new access token without re-authenticating.
 
 ---
 
-### 2. Bug CRUD API
+#### 2. Bug CRUD API
 
 **URL:** `/api/v1/bug/`  
 **Methods:** `GET`, `POST`, `PATCH`, `DELETE`  
@@ -143,7 +143,7 @@ Send a valid refresh token to get a new access token without re-authenticating.
 
 ---
 
-### 3. Comment CRUD API
+#### 3. Comment CRUD API
 
 **URL:** `/api/v1/comment/`  
 **Methods:** `GET`, `POST`, `PATCH`, `DELETE`  
@@ -166,7 +166,7 @@ Send a valid refresh token to get a new access token without re-authenticating.
 
 ---
 
-### 4. Assigned Bugs API
+#### 4. Assigned Bugs API
 
 **URL:** `/api/v1/bugs/assigned/`  
 **Method:** `GET`  
@@ -177,12 +177,12 @@ Send a valid refresh token to get a new access token without re-authenticating.
 
 
 # how to test WebSocket events.
-### 1st: Connect a WebSocket client (e.g., websocat, browser console, Postman WebSocket tab) to the URL ws://<your-domain>/ws/bugtracker/<project_id>/?token=<your_jwt_access_token>.   When connecting to the WebSocket, you need to pass the JWT token as a query parameter (e.g., ?token=your_jwt_token) for authentication.
+#### 1st: Connect a WebSocket client (e.g., websocat, browser console, Postman WebSocket tab) to the URL ws://<your-domain>/ws/bugtracker/<project_id>/?token=<your_jwt_access_token>.   When connecting to the WebSocket, you need to pass the JWT token as a query parameter (e.g., ?token=your_jwt_token) for authentication.
 
-### 2nd: Once connected, any bug created or updated (even through normal API calls) will automatically trigger notifications to all connected clients in that project’s WebSocket group.This works because the backend uses Django signals to listen for bug model changes and broadcasts events through WebSockets to all users connected to the project room.
-### 3rd: The commenter uses the normal API to create the comment. The backend signal detects the new comment and sends a WebSocket event. The bug creator and the assigned user, if connected with a valid JWT token via WebSocket, will receive the notification instantly.
+#### 2nd: Once connected, any bug created or updated (even through normal API calls) will automatically trigger notifications to all connected clients in that project’s WebSocket group.This works because the backend uses Django signals to listen for bug model changes and broadcasts events through WebSockets to all users connected to the project room.
+#### 3rd: The commenter uses the normal API to create the comment. The backend signal detects the new comment and sends a WebSocket event. The bug creator and the assigned user, if connected with a valid JWT token via WebSocket, will receive the notification instantly.
 
-### 4th: For testing the typing indicator event via Postman (WebSocket tab), you just send this JSON message in the message box: Once sent, the backend will broadcast this typing notification to other connected users in the same project room (except you).
+#### 4th: For testing the typing indicator event via Postman (WebSocket tab), you just send this JSON message in the message box: Once sent, the backend will broadcast this typing notification to other connected users in the same project room (except you).
 ---
 {
   "type": "typing",
