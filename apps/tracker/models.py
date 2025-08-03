@@ -27,7 +27,7 @@ class BugModel(models.Model):
     priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES)
     assigned_to = models.ForeignKey(UserModel, on_delete=models.SET_NULL, null=True, related_name='assigned_bugs')
     project = models.ForeignKey(ProjectModel, on_delete=models.CASCADE)
-    created_by = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='created_bugs')
+    created_by = models.ForeignKey(UserModel, on_delete=models.CASCADE,null=True,blank=True, related_name='created_bugs')
 
     def __str__(self):
         return self.title

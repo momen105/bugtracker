@@ -48,13 +48,6 @@ class CustomTokenObtainPairView(APIView):
         data = request.data
         email = data.get("email")
         password = data.get("password")
-        for i in UserModel.objects.all():
-            print(i.email,i.is_staff,i.is_active)
-
-
-        user = UserModel.objects.get(email="admin@admin.com")
-        user.set_password("admin123")  # Set a new password
-        user.save()
 
         if not email or not password:
             return CustomApiResponse(

@@ -20,7 +20,7 @@ class ProjectCRUDView(APIView):
     - DELETE: Delete a project.
     """
 
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = ProjectSerializer
     queryset = ProjectModel.objects.all()
 
@@ -64,11 +64,11 @@ class ProjectCRUDView(APIView):
 
     def post(self, request):
         current_user = request.user
-        
-        serializer = self.serializer_class(data=request.data)
-        notify_project(2, "Project created")  # Example usage of notify_project
+        data = request.data.copy()
+        data["owner"] = current_user.id
+        serializer = self.serializer_class(data=data)
         if serializer.is_valid():
-            serializer.save(owner=current_user)
+            serializer.save()
             return CustomApiResponse(
                 status='success',
                 message='Prject successful!',
@@ -216,9 +216,12 @@ class BugCRUDView(APIView):
 
     def post(self, request):
         current_user = request.user
-        serializer = self.serializer_class(data=request.data)
+        data = request.data.copy()
+        data["created_by"] = current_user.id
+
+        serializer = self.serializer_class(data=data)
         if serializer.is_valid():
-            serializer.save(owner=current_user)
+            serializer.save()
             return CustomApiResponse(
                 status='success',
                 message='Bug successful!',
@@ -361,9 +364,11 @@ class CommentCRUDView(APIView):
 
     def post(self, request):
         current_user = request.user
-        serializer = self.serializer_class(data=request.data)
+        data = request.data.copy()
+        data["commenter"] = current_user.id
+        serializer = self.serializer_class(data=data)
         if serializer.is_valid():
-            serializer.save(owner=current_user)
+            serializer.save()
             return CustomApiResponse(
                 status='success',
                 message='Comment successful!',

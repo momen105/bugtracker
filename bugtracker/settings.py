@@ -38,12 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'apps.tracker.apps.TrackerConfig', 
     'core',
     'rest_framework',
     'rest_framework.authtoken',
     'channels',
     'drf_yasg',
-    'apps.tracker',
     'apps.user',
 ]
 
@@ -80,12 +80,27 @@ WSGI_APPLICATION = 'bugtracker.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+PRODUCTION = env.bool('PRODUCTION')
+
+if PRODUCTION:
+    DATABASES ={
+        "default": {
+            "ENGINE"  : "django.db.backends.postgresql",
+            "NAME"    : env('DB_NAME'),      
+            "USER"    : env('DB_USER'),           
+            "PASSWORD": env('DB_PASS'),           
+            "HOST"    : env('DB_HOST'),
+            "PORT"    : env('DB_PORT'),
+
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
@@ -167,7 +182,7 @@ AUTHENTICATION_BACKENDS = [
 
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5), 
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1), 
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
